@@ -1,0 +1,13 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+
+    select {
+        background-color: white;
+      }
+
+    .cartIcon {
+        height: 50px;
+        width: 50px;
+    }
+}

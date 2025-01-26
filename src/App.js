@@ -1,12 +1,12 @@
 import './globals.scss';
-import { Item } from './components/item';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react'
+import { ProductActionTypes } from './redux/products/action-types';
+import { Item } from './components/item';
+import { Header } from './components/header';
+
 
 function App() {
-
-  const { products } = useSelector(rootReducer => rootReducer.productsReducer);
-
   const dispatch = useDispatch();
 
   const getAllItems = async () => {
@@ -16,7 +16,23 @@ function App() {
       })
 
       dispatch({
-        type: "products/save",
+        type: ProductActionTypes.SAVE_PRODUCTS,
+        payload: await data.json()
+      });
+
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const getAllCategories = async () => {
+    try {
+      const data = await fetch("https://fakestoreapi.com/products/categories", {
+        method: "GET"
+      })
+
+      dispatch({
+        type: ProductActionTypes.SAVE_CATEGORIES,
         payload: await data.json()
       });
 
@@ -27,21 +43,25 @@ function App() {
 
   useEffect(() => {
     getAllItems();
+    getAllCategories();
   }, [])
 
-  console.log("products", products)
+  const { products } = useSelector(rootReducer => rootReducer.productsReducer);
 
   return (
     <div className="App">
-      {
-        products.map((item, index) => {
-          while(index < 5){
-            return (
-              <Item product={item}/>
-            )  
-          }
-        })
-      }
+      <Header />
+        <section>
+          <ul>
+            {
+              products.map((item, index) => {
+                return (
+                  <Item product={item} />
+                )
+              })
+            }
+          </ul>
+        </section>
     </div>
   );
 }

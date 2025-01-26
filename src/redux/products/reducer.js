@@ -1,5 +1,6 @@
 const initialState = {
-    products: []
+    products: [],
+    categories: []
 }
 
 export const productsReducer = (state = initialState, action) => {
@@ -7,7 +8,28 @@ export const productsReducer = (state = initialState, action) => {
         case "products/save":
             return {
                 ...state,
-                products: [...state?.products, ...action?.payload]
+                products: [...action?.payload]
+            }
+
+        case "categories/save":
+            return {
+                ...state,
+                categories: [...action?.payload]
+            }
+
+        case "products/filter":
+            return {
+                ...state,
+                products: state.products.map((item) => {
+
+                    if (action.payload !== "") {
+                        item.category !== action.payload ? item["hidden"] = true : item["hidden"] = false
+                    } else {
+                        item["hidden"] = false;
+                    }
+
+                    return item
+                })
             }
 
         default:
